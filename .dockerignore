@@ -1,0 +1,14 @@
+build
+.dart_tool
+.idea
+.vscode
+.git
+.gitignore
+android
+ios
+macos
+linux
+windows
+test
+**/.DS_Store
+pubspec.lock
