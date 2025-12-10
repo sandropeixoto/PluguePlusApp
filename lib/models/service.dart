@@ -1,3 +1,5 @@
+import 'parsers.dart';
+
 class Service {
   const Service({
     required this.id,
@@ -5,7 +7,6 @@ class Service {
     this.description,
     this.phone,
     this.site,
-    this.address,
     this.latitude,
     this.longitude,
     required this.categoryId,
@@ -58,4 +59,3 @@ class Service {
     );
   }
 }
-import 'parsers.dart';

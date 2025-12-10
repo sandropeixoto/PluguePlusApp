@@ -1,3 +1,5 @@
+import 'parsers.dart';
+
 class Charger {
   const Charger({
     required this.id,
@@ -57,4 +59,3 @@ class Charger {
     );
   }
 }
-import 'parsers.dart';
