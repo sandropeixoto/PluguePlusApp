@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../models/category.dart';
 import '../models/charger.dart';
+import '../models/post.dart';
 import '../models/service.dart';
+import '../models/user.dart';
 import 'repository.dart';
 
 /// Consome o php-crud-api hospedado em producao.
@@ -24,6 +26,8 @@ class ApiRepository implements Repository {
   Future<List<Category>>? _categories;
   Future<List<Service>>? _services;
   Future<List<Charger>>? _chargers;
+  Future<List<Post>>? _posts;
+  Future<List<User>>? _users;
 
   @override
   Future<List<Category>> fetchCategories() {
@@ -46,6 +50,22 @@ class ApiRepository implements Repository {
     return _chargers ??= _fetchRecords<Charger>(
       ApiConfig.chargersTable,
       (json) => Charger.fromJson(json),
+    );
+  }
+
+  @override
+  Future<List<Post>> fetchPosts() {
+    return _posts ??= _fetchRecords<Post>(
+      ApiConfig.postsTable,
+      (json) => Post.fromJson(json),
+    );
+  }
+
+  @override
+  Future<List<User>> fetchUsers() {
+    return _users ??= _fetchRecords<User>(
+      ApiConfig.usersTable,
+      (json) => User.fromJson(json),
     );
   }
 
@@ -82,6 +102,8 @@ class ApiRepository implements Repository {
         if (T == Category) return (await _fallback!.fetchCategories()) as List<T>;
         if (T == Service) return (await _fallback!.fetchServices()) as List<T>;
         if (T == Charger) return (await _fallback!.fetchChargers()) as List<T>;
+        if (T == Post) return (await _fallback!.fetchPosts()) as List<T>;
+        if (T == User) return (await _fallback!.fetchUsers()) as List<T>;
       }
       rethrow;
     }

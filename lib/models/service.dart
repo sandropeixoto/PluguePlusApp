@@ -11,6 +11,12 @@ class Service {
     required this.categoryId,
     this.categoryName,
     this.createdAt,
+    this.city,
+    this.state,
+    this.status,
+    this.address,
+    this.email,
+    this.website,
   });
 
   final int id;
@@ -18,50 +24,38 @@ class Service {
   final String? description;
   final String? phone;
   final String? site;
-  final String? address;
   final double? latitude;
   final double? longitude;
   final int categoryId;
   final String? categoryName;
   final DateTime? createdAt;
+  final String? city;
+  final String? state;
+  final String? status;
+  final String? address;
+  final String? email;
+  final String? website;
 
   factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
-      id: _asInt(json['id'] ?? json['service_id'] ?? json['codigo']),
+      id: parseInt(json['id'] ?? json['service_id'] ?? json['codigo']),
       name: (json['name'] ?? json['nome'] ?? 'Sem nome').toString(),
       description: json['description']?.toString() ?? json['descricao']?.toString(),
       phone: json['phone']?.toString() ?? json['telefone']?.toString(),
-      site: json['site']?.toString() ??
-          json['url']?.toString() ??
-          json['link']?.toString(),
+      site: json['site']?.toString() ?? json['url']?.toString() ?? json['link']?.toString(),
       address: json['address']?.toString() ?? json['endereco']?.toString(),
-      latitude: _asDouble(json['latitude'] ?? json['lat']),
-      longitude: _asDouble(json['longitude'] ?? json['lng'] ?? json['long']),
-      categoryId:
-          _asInt(json['category_id'] ?? json['categoria_id'] ?? json['category']),
+      latitude: parseDouble(json['latitude'] ?? json['lat']),
+      longitude: parseDouble(json['longitude'] ?? json['lng'] ?? json['long']),
+      categoryId: parseInt(json['category_id'] ?? json['categoria_id'] ?? json['category']),
       categoryName: json['category_name']?.toString() ??
           json['categoria_nome']?.toString(),
-      createdAt: _asDate(json['created_at'] ?? json['data_criacao']),
+      createdAt: parseDate(json['created_at'] ?? json['data_criacao']),
+      city: json['city']?.toString() ?? json['cidade']?.toString(),
+      state: json['state']?.toString() ?? json['uf']?.toString(),
+      status: json['status']?.toString(),
+      email: json['email']?.toString(),
+      website: json['website']?.toString(),
     );
   }
 }
-
-int _asInt(dynamic value) {
-  if (value == null) return 0;
-  if (value is int) return value;
-  if (value is double) return value.toInt();
-  return int.tryParse(value.toString()) ?? 0;
-}
-
-double? _asDouble(dynamic value) {
-  if (value == null) return null;
-  if (value is double) return value;
-  if (value is int) return value.toDouble();
-  return double.tryParse(value.toString());
-}
-
-DateTime? _asDate(dynamic value) {
-  if (value == null) return null;
-  if (value is DateTime) return value;
-  return DateTime.tryParse(value.toString());
-}
+import 'parsers.dart';

@@ -1,6 +1,8 @@
 import '../models/category.dart';
 import '../models/charger.dart';
+import '../models/post.dart';
 import '../models/service.dart';
+import '../models/user.dart';
 
 class RepositorySnapshot {
   const RepositorySnapshot({
@@ -19,6 +21,8 @@ abstract class Repository {
   Future<List<Category>> fetchCategories();
   Future<List<Service>> fetchServices();
   Future<List<Charger>> fetchChargers();
+  Future<List<Post>> fetchPosts() async => [];
+  Future<List<User>> fetchUsers() async => [];
 
   /// Conveniencia para carregar os dados usados na home de uma vez.
   Future<RepositorySnapshot> fetchSnapshot() async {

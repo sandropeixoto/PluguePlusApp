@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'pages/chargers_page.dart';
 import 'pages/home_page.dart';
@@ -40,8 +41,10 @@ class _PluguePlusAppState extends State<PluguePlusApp> {
     return MaterialApp(
       title: 'Plugue+',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1B4965)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0F8F5F)),
         useMaterial3: true,
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        scaffoldBackgroundColor: const Color(0xFFF4F8F5),
       ),
       home: Scaffold(
         body: SafeArea(child: pages[currentIndex]),

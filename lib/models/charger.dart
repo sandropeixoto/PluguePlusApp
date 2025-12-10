@@ -9,6 +9,13 @@ class Charger {
     this.longitude,
     this.status = 'ativo',
     this.createdAt,
+    this.city,
+    this.state,
+    this.costType,
+    this.costValue,
+    this.availability,
+    this.openingHours,
+    this.amenities,
   });
 
   final int id;
@@ -20,39 +27,34 @@ class Charger {
   final double? longitude;
   final String status;
   final DateTime? createdAt;
+  final String? city;
+  final String? state;
+  final String? costType;
+  final double? costValue;
+  final String? availability;
+  final String? openingHours;
+  final String? amenities;
 
   factory Charger.fromJson(Map<String, dynamic> json) {
     return Charger(
-      id: _asInt(json['id'] ?? json['charger_id'] ?? json['codigo']),
+      id: parseInt(json['id'] ?? json['charger_id'] ?? json['codigo']),
       name: (json['name'] ?? json['nome'] ?? 'Sem nome').toString(),
       address: json['address']?.toString() ?? json['endereco']?.toString(),
-      powerKw: _asDouble(json['power_kw'] ?? json['potencia_kw'] ?? json['potencia']),
+      powerKw: parseDouble(json['power_kw'] ?? json['potencia_kw'] ?? json['potencia']),
       connectorType:
           json['connector_type']?.toString() ?? json['tipo_conector']?.toString(),
-      latitude: _asDouble(json['latitude'] ?? json['lat']),
-      longitude: _asDouble(json['longitude'] ?? json['lng'] ?? json['long']),
+      latitude: parseDouble(json['latitude'] ?? json['lat']),
+      longitude: parseDouble(json['longitude'] ?? json['lng'] ?? json['long']),
       status: (json['status'] ?? json['situacao'] ?? 'ativo').toString(),
-      createdAt: _asDate(json['created_at'] ?? json['data_criacao']),
+      createdAt: parseDate(json['created_at'] ?? json['data_criacao']),
+      city: json['city']?.toString() ?? json['cidade']?.toString(),
+      state: json['state']?.toString() ?? json['uf']?.toString(),
+      costType: json['cost_type']?.toString(),
+      costValue: parseDouble(json['cost_value']),
+      availability: json['availability']?.toString(),
+      openingHours: json['opening_hours']?.toString(),
+      amenities: json['amenities']?.toString(),
     );
   }
 }
-
-int _asInt(dynamic value) {
-  if (value == null) return 0;
-  if (value is int) return value;
-  if (value is double) return value.toInt();
-  return int.tryParse(value.toString()) ?? 0;
-}
-
-double? _asDouble(dynamic value) {
-  if (value == null) return null;
-  if (value is double) return value;
-  if (value is int) return value.toDouble();
-  return double.tryParse(value.toString());
-}
-
-DateTime? _asDate(dynamic value) {
-  if (value == null) return null;
-  if (value is DateTime) return value;
-  return DateTime.tryParse(value.toString());
-}
+import 'parsers.dart';
