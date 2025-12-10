@@ -49,6 +49,18 @@ class ApiRepository implements Repository {
     );
   }
 
+  @override
+  Future<RepositorySnapshot> fetchSnapshot() async {
+    final categories = await fetchCategories();
+    final services = await fetchServices();
+    final chargers = await fetchChargers();
+    return RepositorySnapshot(
+      categories: categories,
+      services: services,
+      chargers: chargers,
+    );
+  }
+
   Future<List<T>> _fetchRecords<T>(
     String table,
     T Function(Map<String, dynamic>) parser,

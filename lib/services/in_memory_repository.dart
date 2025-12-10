@@ -28,6 +28,15 @@ class InMemoryRepository implements Repository {
   @override
   Future<List<Charger>> fetchChargers() async => listChargers();
 
+  @override
+  Future<RepositorySnapshot> fetchSnapshot() async {
+    return RepositorySnapshot(
+      categories: listCategories(),
+      services: listServices(),
+      chargers: listChargers(),
+    );
+  }
+
   Category createCategory({required String name, String? icon}) {
     final nextId = _categories.isEmpty ? 1 : _categories.last.id + 1;
     final category = Category(id: nextId, name: name, icon: icon);
