@@ -43,6 +43,11 @@ Recriacao em Flutter do app Plugue+, reaproveitando a logica de categorias, serv
    ```
    O Nginx no container serve o build web e faz fallback de SPA para `index.html` (veja `nginx.conf`).
 
+## Backend php-crud-api
+- O app consome a API em producao via `lib/config/api_config.dart`, apontando para `https://sspeixoto.com.br/api/api-plugueplus.php`.
+- Ajuste os nomes das tabelas em `ApiConfig` se divergirem (`categorias`, `servicos`, `carregadores`).
+- Se a API ficar indisponivel, o app exibe um fallback com dados em memoria (`InMemoryRepository`).
+
 ## Notas de logica
 - O `InMemoryRepository` em `lib/services/in_memory_repository.dart` implementa as mesmas validacoes do backend: categoria precisa existir para criar servico; carregadores guardam status, potencia, tipo de conector etc.
 - Os dados sao seedados em memoria para demonstracao (categorias, servicos e carregadores ficticios).

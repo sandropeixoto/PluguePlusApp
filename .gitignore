@@ -13,7 +13,6 @@ ios/
 macos/
 windows/
 linux/
-web/
 
 # IDE
 .idea/

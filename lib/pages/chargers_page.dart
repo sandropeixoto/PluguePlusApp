@@ -1,41 +1,56 @@
 import 'package:flutter/material.dart';
 
 import '../models/charger.dart';
-import '../services/in_memory_repository.dart';
+import '../services/repository.dart';
 import '../widgets/section_title.dart';
 
 class ChargersPage extends StatelessWidget {
   const ChargersPage({super.key, required this.repository});
 
-  final InMemoryRepository repository;
+  final Repository repository;
 
   @override
   Widget build(BuildContext context) {
-    final chargers = repository.listChargers();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carregadores'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SectionTitle('Pontos de energia'),
-            const SizedBox(height: 8),
-            Expanded(
-              child: chargers.isEmpty
-                  ? const Center(child: Text('Nenhum carregador cadastrado.'))
-                  : ListView.separated(
-                      itemBuilder: (_, index) =>
-                          _ChargerTile(charger: chargers[index]),
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemCount: chargers.length,
-                    ),
+      body: FutureBuilder<List<Charger>>(
+        future: repository.fetchChargers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Erro ao carregar carregadores: ${snapshot.error}'),
+            );
+          }
+          final chargers = snapshot.data ?? [];
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle('Pontos de energia'),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: chargers.isEmpty
+                      ? const Center(
+                          child: Text('Nenhum carregador cadastrado.'),
+                        )
+                      : ListView.separated(
+                          itemBuilder: (_, index) =>
+                              _ChargerTile(charger: chargers[index]),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 12),
+                          itemCount: chargers.length,
+                        ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

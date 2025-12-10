@@ -39,7 +39,7 @@ class ServiceTile extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Chip(
-                label: Text(service.categoryName),
+                label: Text(service.categoryName ?? 'Sem categoria'),
                 visualDensity: VisualDensity.compact,
               ),
             ],

@@ -3,9 +3,10 @@ import 'package:collection/collection.dart';
 import '../models/category.dart';
 import '../models/charger.dart';
 import '../models/service.dart';
+import 'repository.dart';
 
 /// Reimplementa a mesma logica do backend PHP em uma camada local de memoria.
-class InMemoryRepository {
+class InMemoryRepository implements Repository {
   InMemoryRepository() {
     _seed();
   }
@@ -15,10 +16,17 @@ class InMemoryRepository {
   final List<Charger> _chargers = [];
 
   List<Category> listCategories() => List.unmodifiable(_categories);
-
   List<Service> listServices() => List.unmodifiable(_services);
-
   List<Charger> listChargers() => List.unmodifiable(_chargers);
+
+  @override
+  Future<List<Category>> fetchCategories() async => listCategories();
+
+  @override
+  Future<List<Service>> fetchServices() async => listServices();
+
+  @override
+  Future<List<Charger>> fetchChargers() async => listChargers();
 
   Category createCategory({required String name, String? icon}) {
     final nextId = _categories.isEmpty ? 1 : _categories.last.id + 1;

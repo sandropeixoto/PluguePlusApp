@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'pages/chargers_page.dart';
 import 'pages/home_page.dart';
 import 'pages/services_page.dart';
+import 'services/api_repository.dart';
 import 'services/in_memory_repository.dart';
+import 'services/repository.dart';
 
 void main() {
   runApp(const PluguePlusApp());
@@ -17,8 +19,15 @@ class PluguePlusApp extends StatefulWidget {
 }
 
 class _PluguePlusAppState extends State<PluguePlusApp> {
-  final InMemoryRepository repository = InMemoryRepository();
+  late final Repository repository;
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Tenta consumir a API php-crud-api; se nao conseguir, cai no fallback em memoria.
+    repository = ApiRepository(fallback: InMemoryRepository());
+  }
 
   @override
   Widget build(BuildContext context) {
