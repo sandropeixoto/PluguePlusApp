@@ -85,12 +85,6 @@ class AppTheme {
           shadowColor: primaryGreen.withOpacity(0.4),
         ),
       ),
-      cardTheme: CardThemeData(
-        color: lightGray,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: borderRadius),
-        margin: const EdgeInsets.symmetric(vertical: 8),
-      ),
       chipTheme: ChipThemeData(
         backgroundColor: lightGray.withOpacity(0.5),
         selectedColor: primaryGreen.withOpacity(0.8),
