@@ -64,7 +64,7 @@ class ApiRepository {
             price: existingAd.price,
             status: existingAd.status,
             views: existingAd.views,
-            expiresAt: existingAt: existingAd.expiresAt,
+            expiresAt: existingAd.expiresAt,
             createdAt: existingAd.createdAt,
             updatedAt: existingAd.updatedAt,
             images: updatedImages,

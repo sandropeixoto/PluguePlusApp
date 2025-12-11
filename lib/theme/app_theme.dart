@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   // --- CORES ---
   static const Color primaryGreen = Color(0xFF1EEA7E); // Verde Neon Suave
+  static const Color primaryColor = primaryGreen;
   static const Color emeraldGreen = Color(0xFF00C853); // Verde Esmeralda
   static const Color electricGreen = Color(0xFF76FF03); // Verde Elétrico
   static const Color petroleumBlue = Color(0xFF0D47A1); // Azul Petróleo
