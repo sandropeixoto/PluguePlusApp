@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:plugueplus/screens/shell.dart';
-import 'package:plugueplus/services/api_service.dart';
-import 'package:plugueplus/services/repository.dart';
 import 'package:plugueplus/theme/app_theme.dart';
 
 void main() {
-  final repository = Repository(apiService: ApiService());
-  runApp(MainApp(repository: repository));
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key, required this.repository});
-
-  final Repository repository;
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {

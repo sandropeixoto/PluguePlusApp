@@ -4,7 +4,6 @@ COPY pubspec.yaml .
 RUN flutter config --enable-web
 RUN flutter pub get
 COPY . .
-RUN flutter pub get
 RUN flutter build web --release --source-maps
 
 FROM nginx:1.27-alpine
