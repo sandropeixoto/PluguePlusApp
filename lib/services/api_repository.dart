@@ -34,6 +34,7 @@ class ApiRepository implements Repository {
   Future<List<User>>? _users;
   Future<List<ClassifiedCategory>>? _classifiedCategories;
   Future<List<ClassifiedAd>>? _classifiedAds;
+  Future<List<ClassifiedImage>>? _classifiedImages;
 
   @override
   Future<List<Category>> fetchCategories() {
@@ -183,6 +184,34 @@ class ApiRepository implements Repository {
     _classifiedAds = null;
     _classifiedImages = null;
     return ClassifiedAd.fromJson(created);
+  }
+
+  Future<Map<String, dynamic>> _postRecord(
+    String table,
+    Map<String, dynamic> payload,
+  ) async {
+    final uri = Uri.parse('$baseUrl/records/$table');
+    final response = await _client.post(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(payload),
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception(
+        'Erro ${response.statusCode} ao criar em $table: ${response.body}',
+      );
+    }
+    final decoded = jsonDecode(response.body);
+    if (decoded is Map<String, dynamic> && decoded.containsKey('id')) {
+      return decoded;
+    }
+    if (decoded is Map<String, dynamic> && decoded['records'] is List) {
+      final records = decoded['records'] as List;
+      if (records.isNotEmpty && records.first is Map<String, dynamic>) {
+        return records.first as Map<String, dynamic>;
+      }
+    }
+    throw const FormatException('Resposta inesperada ao criar registro');
   }
 
   Future<List<T>> _fetchRecords<T>(

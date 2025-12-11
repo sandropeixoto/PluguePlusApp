@@ -318,13 +318,13 @@ class InMemoryRepository implements Repository {
   }
 
   void _seed() {
-    final userSandro = createUser(
+    final userSandro = createUserSync(
       name: 'Sandro Peixoto',
       email: 'sandro@plugueplus.com',
       city: 'Belem',
       state: 'PA',
     );
-    final userGabi = createUser(
+    final userGabi = createUserSync(
       name: 'Gabriela Santos',
       email: 'gabi@plugueplus.com',
       city: 'Belem',
@@ -407,14 +407,14 @@ class InMemoryRepository implements Repository {
       costType: 'gratuito',
     );
 
-    createPost(
+    createPostSync(
       userId: userSandro.id,
       content: 'Instalei um carregador residencial ontem, foi rapido e seguro.',
       likes: 12,
       comments: 3,
       shares: 1,
     );
-    createPost(
+    createPostSync(
       userId: userGabi.id,
       content: 'Alguem indica oficina para revisao de 20k do Dolphin em Belem?',
       likes: 5,
@@ -422,7 +422,7 @@ class InMemoryRepository implements Repository {
       shares: 0,
     );
 
-    final ad1 = createClassifiedAd(
+    final ad1 = createClassifiedAdSync(
       userId: userSandro.id,
       categoryId: classCatVeiculos.id,
       title: 'BYD Dolphin 2024 - impecavel',
@@ -435,7 +435,7 @@ class InMemoryRepository implements Repository {
       imagePath: 'https://placehold.co/400x250?text=Dolphin',
       isMain: true,
     );
-    final ad2 = createClassifiedAd(
+    final ad2 = createClassifiedAdSync(
       userId: userGabi.id,
       categoryId: classCatPecas.id,
       title: 'Cabo Tipo 2 - 7kW',
