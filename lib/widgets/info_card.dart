@@ -47,8 +47,9 @@ class InfoCard extends StatelessWidget {
             children: [
               Text(
                 value,
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               Text(label, style: theme.textTheme.bodySmall),
             ],

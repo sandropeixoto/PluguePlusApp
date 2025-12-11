@@ -58,7 +58,9 @@ class _ClassifiedsPageState extends State<ClassifiedsPage> {
           final data = snapshot.data!;
           final ads = _selectedCategoryId == null
               ? data.ads
-              : data.ads.where((a) => a.categoryId == _selectedCategoryId).toList();
+              : data.ads
+                    .where((a) => a.categoryId == _selectedCategoryId)
+                    .toList();
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -169,7 +171,9 @@ class _AdsGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > 700;
-        final itemWidth = isWide ? (constraints.maxWidth - 12) / 2 : constraints.maxWidth;
+        final itemWidth = isWide
+            ? (constraints.maxWidth - 12) / 2
+            : constraints.maxWidth;
         return Wrap(
           spacing: 12,
           runSpacing: 12,
@@ -221,7 +225,11 @@ class _AdCard extends StatelessWidget {
               child: imageUrl != null
                   ? Image.network(imageUrl, fit: BoxFit.cover)
                   : const Center(
-                      child: Icon(Icons.image_outlined, size: 48, color: Color(0xFF0F8F5F)),
+                      child: Icon(
+                        Icons.image_outlined,
+                        size: 48,
+                        color: Color(0xFF0F8F5F),
+                      ),
                     ),
             ),
           ),
@@ -345,7 +353,8 @@ class _NewAdFormState extends State<_NewAdForm> {
                     labelText: 'Titulo',
                     border: OutlineInputBorder(),
                   ),
-                  validator: (v) => v == null || v.isEmpty ? 'Informe o titulo' : null,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Informe o titulo' : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -370,18 +379,17 @@ class _NewAdFormState extends State<_NewAdForm> {
                   value: _selectedCategory,
                   items: _categories
                       .map(
-                        (c) => DropdownMenuItem(
-                          value: c,
-                          child: Text(c.name),
-                        ),
+                        (c) => DropdownMenuItem(value: c, child: Text(c.name)),
                       )
                       .toList(),
                   decoration: const InputDecoration(
                     labelText: 'Categoria',
                     border: OutlineInputBorder(),
                   ),
-                  onChanged: (value) => setState(() => _selectedCategory = value),
-                  validator: (v) => v == null ? 'Selecione uma categoria' : null,
+                  onChanged: (value) =>
+                      setState(() => _selectedCategory = value),
+                  validator: (v) =>
+                      v == null ? 'Selecione uma categoria' : null,
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -393,7 +401,8 @@ class _NewAdFormState extends State<_NewAdForm> {
                           labelText: 'Seu nome',
                           border: OutlineInputBorder(),
                         ),
-                        validator: (v) => v == null || v.isEmpty ? 'Informe seu nome' : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? 'Informe seu nome' : null,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -404,7 +413,8 @@ class _NewAdFormState extends State<_NewAdForm> {
                           labelText: 'Seu email',
                           border: OutlineInputBorder(),
                         ),
-                        validator: (v) => v == null || v.isEmpty ? 'Informe o email' : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? 'Informe o email' : null,
                       ),
                     ),
                   ],
@@ -489,9 +499,9 @@ class _NewAdFormState extends State<_NewAdForm> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao subir imagem: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erro ao subir imagem: $e')));
       }
     }
   }
@@ -508,10 +518,7 @@ class _NewAdFormState extends State<_NewAdForm> {
         orElse: () => const User(id: 0, name: '', email: ''),
       );
       if (user.id == 0) {
-        user = await widget.repository.createUser(
-          name: name,
-          email: email,
-        );
+        user = await widget.repository.createUser(name: name, email: email);
       }
 
       await widget.repository.createClassifiedAd(
@@ -526,9 +533,9 @@ class _NewAdFormState extends State<_NewAdForm> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao publicar: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erro ao publicar: $e')));
       }
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -551,10 +558,7 @@ class _Pill extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyle(color: color, fontWeight: FontWeight.w600),
       ),
     );
   }

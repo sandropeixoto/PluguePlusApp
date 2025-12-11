@@ -12,9 +12,7 @@ class ChargersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Carregadores'),
-      ),
+      appBar: AppBar(title: const Text('Carregadores')),
       body: FutureBuilder<List<Charger>>(
         future: repository.fetchChargers(),
         builder: (context, snapshot) {
@@ -67,8 +65,8 @@ class _ChargerTile extends StatelessWidget {
     final badgeColor = charger.status == 'ativo'
         ? Colors.green.shade600
         : charger.status == 'manutencao'
-            ? Colors.orange.shade700
-            : Colors.grey.shade600;
+        ? Colors.orange.shade700
+        : Colors.grey.shade600;
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -89,12 +87,17 @@ class _ChargerTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(charger.name,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700)),
+              Text(
+                charger.name,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: badgeColor.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(999),

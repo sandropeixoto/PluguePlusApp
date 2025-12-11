@@ -42,9 +42,12 @@ class Charger {
       id: parseInt(json['id'] ?? json['charger_id'] ?? json['codigo']),
       name: (json['name'] ?? json['nome'] ?? 'Sem nome').toString(),
       address: json['address']?.toString() ?? json['endereco']?.toString(),
-      powerKw: parseDouble(json['power_kw'] ?? json['potencia_kw'] ?? json['potencia']),
+      powerKw: parseDouble(
+        json['power_kw'] ?? json['potencia_kw'] ?? json['potencia'],
+      ),
       connectorType:
-          json['connector_type']?.toString() ?? json['tipo_conector']?.toString(),
+          json['connector_type']?.toString() ??
+          json['tipo_conector']?.toString(),
       latitude: parseDouble(json['latitude'] ?? json['lat']),
       longitude: parseDouble(json['longitude'] ?? json['lng'] ?? json['long']),
       status: (json['status'] ?? json['situacao'] ?? 'ativo').toString(),

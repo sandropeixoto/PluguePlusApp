@@ -41,14 +41,21 @@ class Service {
     return Service(
       id: parseInt(json['id'] ?? json['service_id'] ?? json['codigo']),
       name: (json['name'] ?? json['nome'] ?? 'Sem nome').toString(),
-      description: json['description']?.toString() ?? json['descricao']?.toString(),
+      description:
+          json['description']?.toString() ?? json['descricao']?.toString(),
       phone: json['phone']?.toString() ?? json['telefone']?.toString(),
-      site: json['site']?.toString() ?? json['url']?.toString() ?? json['link']?.toString(),
+      site:
+          json['site']?.toString() ??
+          json['url']?.toString() ??
+          json['link']?.toString(),
       address: json['address']?.toString() ?? json['endereco']?.toString(),
       latitude: parseDouble(json['latitude'] ?? json['lat']),
       longitude: parseDouble(json['longitude'] ?? json['lng'] ?? json['long']),
-      categoryId: parseInt(json['category_id'] ?? json['categoria_id'] ?? json['category']),
-      categoryName: json['category_name']?.toString() ??
+      categoryId: parseInt(
+        json['category_id'] ?? json['categoria_id'] ?? json['category'],
+      ),
+      categoryName:
+          json['category_name']?.toString() ??
           json['categoria_nome']?.toString(),
       createdAt: parseDate(json['created_at'] ?? json['data_criacao']),
       city: json['city']?.toString() ?? json['cidade']?.toString(),

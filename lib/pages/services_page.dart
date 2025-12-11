@@ -13,9 +13,7 @@ class ServicesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Servicos'),
-      ),
+      appBar: AppBar(title: const Text('Servicos')),
       body: FutureBuilder<List<Service>>(
         future: repository.fetchServices(),
         builder: (context, snapshot) {

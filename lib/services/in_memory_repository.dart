@@ -34,8 +34,8 @@ class InMemoryRepository implements Repository {
       List.unmodifiable(_classifiedCategories);
   List<ClassifiedAd> listClassifiedAds() => List.unmodifiable(_classifiedAds);
   List<ClassifiedImage> listClassifiedImages(int adId) => List.unmodifiable(
-        _classifiedImages.where((img) => img.classifiedId == adId),
-      );
+    _classifiedImages.where((img) => img.classifiedId == adId),
+  );
 
   @override
   Future<List<Category>> fetchCategories() async => listCategories();
@@ -81,12 +81,7 @@ class InMemoryRepository implements Repository {
     String? vehicleModel,
     String userType = 'owner',
   }) async {
-    return createUserSync(
-      name: name,
-      email: email,
-      city: city,
-      state: state,
-    );
+    return createUserSync(name: name, email: email, city: city, state: state);
   }
 
   @override
@@ -95,10 +90,7 @@ class InMemoryRepository implements Repository {
     required String content,
     String? imageUrl,
   }) async {
-    return createPostSync(
-      userId: userId,
-      content: content,
-    );
+    return createPostSync(userId: userId, content: content);
   }
 
   @override
@@ -261,8 +253,9 @@ class InMemoryRepository implements Repository {
     String? description,
     String? icon,
   }) {
-    final nextId =
-        _classifiedCategories.isEmpty ? 1 : _classifiedCategories.last.id + 1;
+    final nextId = _classifiedCategories.isEmpty
+        ? 1
+        : _classifiedCategories.last.id + 1;
     final category = ClassifiedCategory(
       id: nextId,
       name: name,
@@ -283,8 +276,9 @@ class InMemoryRepository implements Repository {
     String status = 'active',
   }) {
     final nextId = _classifiedAds.isEmpty ? 1 : _classifiedAds.last.id + 1;
-    final category =
-        _classifiedCategories.firstWhereOrNull((c) => c.id == categoryId);
+    final category = _classifiedCategories.firstWhereOrNull(
+      (c) => c.id == categoryId,
+    );
     final ad = ClassifiedAd(
       id: nextId,
       userId: userId,
@@ -306,7 +300,9 @@ class InMemoryRepository implements Repository {
     required String imagePath,
     bool isMain = false,
   }) {
-    final nextId = _classifiedImages.isEmpty ? 1 : _classifiedImages.last.id + 1;
+    final nextId = _classifiedImages.isEmpty
+        ? 1
+        : _classifiedImages.last.id + 1;
     final img = ClassifiedImage(
       id: nextId,
       classifiedId: classifiedId,
@@ -331,14 +327,21 @@ class InMemoryRepository implements Repository {
       state: 'PA',
     );
 
-    final catEletrica = createCategory(name: 'Eletrica Automotiva', icon: 'bolt');
+    final catEletrica = createCategory(
+      name: 'Eletrica Automotiva',
+      icon: 'bolt',
+    );
     final catOficinas = createCategory(name: 'Oficina Mecanica', icon: 'build');
     final catHospedagem = createCategory(name: 'Hospitalidade', icon: 'hotel');
     final catAcessorios = createCategory(name: 'Acessorios', icon: 'shopping');
-    final classCatVeiculos =
-        createClassifiedCategory(name: 'Veiculos', slug: 'veiculos');
-    final classCatPecas =
-        createClassifiedCategory(name: 'Pecas e Acessorios', slug: 'pecas');
+    final classCatVeiculos = createClassifiedCategory(
+      name: 'Veiculos',
+      slug: 'veiculos',
+    );
+    final classCatPecas = createClassifiedCategory(
+      name: 'Pecas e Acessorios',
+      slug: 'pecas',
+    );
 
     createService(
       name: 'Eletroposto Centro',

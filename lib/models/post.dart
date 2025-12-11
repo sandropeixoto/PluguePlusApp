@@ -32,8 +32,12 @@ class Post {
       createdAt: parseDate(json['created_at']),
       updatedAt: parseDate(json['updated_at']),
       likes: parseInt(json['likes'] ?? json['likes_count'] ?? json['curtidas']),
-      comments: parseInt(json['comments'] ?? json['comments_count'] ?? json['comentarios']),
-      shares: parseInt(json['shares'] ?? json['shares_count'] ?? json['compartilhamentos']),
+      comments: parseInt(
+        json['comments'] ?? json['comments_count'] ?? json['comentarios'],
+      ),
+      shares: parseInt(
+        json['shares'] ?? json['shares_count'] ?? json['compartilhamentos'],
+      ),
     );
   }
 }

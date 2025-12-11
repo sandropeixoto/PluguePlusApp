@@ -14,8 +14,8 @@ class UploadResult {
 /// Cliente simples para upload de imagens (classificados e feed).
 class UploadService {
   UploadService({http.Client? client})
-      : _client = client ?? http.Client(),
-        _random = Random.secure();
+    : _client = client ?? http.Client(),
+      _random = Random.secure();
 
   final http.Client _client;
   final Random _random;
@@ -47,19 +47,17 @@ class UploadService {
     required String originalName,
     required String path,
   }) async {
-    final unique = '${DateTime.now().toUtc().millisecondsSinceEpoch}_${_random.nextInt(1 << 32)}';
+    final unique =
+        '${DateTime.now().toUtc().millisecondsSinceEpoch}_${_random.nextInt(1 << 32)}';
     final sanitized = originalName.replaceAll(RegExp(r'[^a-zA-Z0-9_.-]'), '_');
     final fileName = '$path/$unique\_$sanitized';
 
-    final uri =
-        Uri.parse('${ApiConfig.uploadBaseUrl}?action=upload&folder=$path');
+    final uri = Uri.parse(
+      '${ApiConfig.uploadBaseUrl}?action=upload&folder=$path',
+    );
     final request = http.MultipartRequest('POST', uri);
     request.files.add(
-      http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: fileName,
-      ),
+      http.MultipartFile.fromBytes('file', bytes, filename: fileName),
     );
 
     final response = await _client.send(request);

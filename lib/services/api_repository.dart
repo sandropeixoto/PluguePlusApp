@@ -20,8 +20,8 @@ class ApiRepository implements Repository {
     http.Client? client,
     this.baseUrl = ApiConfig.baseUrl,
     Repository? fallback,
-  })  : _client = client ?? http.Client(),
-        _fallback = fallback;
+  }) : _client = client ?? http.Client(),
+       _fallback = fallback;
 
   final http.Client _client;
   final Repository? _fallback;
@@ -233,7 +233,8 @@ class ApiRepository implements Repository {
     } catch (error) {
       if (_fallback != null) {
         // Fallback para os dados em memoria quando a API nao responde.
-        if (T == Category) return (await _fallback!.fetchCategories()) as List<T>;
+        if (T == Category)
+          return (await _fallback!.fetchCategories()) as List<T>;
         if (T == Service) return (await _fallback!.fetchServices()) as List<T>;
         if (T == Charger) return (await _fallback!.fetchChargers()) as List<T>;
         if (T == Post) return (await _fallback!.fetchPosts()) as List<T>;
