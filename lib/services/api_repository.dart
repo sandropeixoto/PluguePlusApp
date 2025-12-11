@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../models/category.dart';
 import '../models/charger.dart';
+import '../models/classified_ad.dart';
+import '../models/classified_category.dart';
+import '../models/classified_image.dart';
 import '../models/post.dart';
 import '../models/service.dart';
 import '../models/user.dart';
@@ -28,6 +31,8 @@ class ApiRepository implements Repository {
   Future<List<Charger>>? _chargers;
   Future<List<Post>>? _posts;
   Future<List<User>>? _users;
+  Future<List<ClassifiedCategory>>? _classifiedCategories;
+  Future<List<ClassifiedAd>>? _classifiedAds;
 
   @override
   Future<List<Category>> fetchCategories() {
@@ -70,6 +75,30 @@ class ApiRepository implements Repository {
   }
 
   @override
+  Future<List<ClassifiedCategory>> fetchClassifiedCategories() {
+    return _classifiedCategories ??= _fetchRecords<ClassifiedCategory>(
+      ApiConfig.classifiedCategoriesTable,
+      (json) => ClassifiedCategory.fromJson(json),
+    );
+  }
+
+  @override
+  Future<List<ClassifiedAd>> fetchClassifiedAds() {
+    return _classifiedAds ??= _fetchRecords<ClassifiedAd>(
+      '${ApiConfig.classifiedAdsTable}?join=${ApiConfig.classifiedImagesTable}&join=${ApiConfig.classifiedCategoriesTable}',
+      (json) => ClassifiedAd.fromJson(json),
+    );
+  }
+
+  @override
+  Future<List<ClassifiedImage>> fetchClassifiedImages(int adId) {
+    return _fetchRecords<ClassifiedImage>(
+      '${ApiConfig.classifiedImagesTable}?filter=classified_id,eq,$adId',
+      (json) => ClassifiedImage.fromJson(json),
+    );
+  }
+
+  @override
   Future<RepositorySnapshot> fetchSnapshot() async {
     final categories = await fetchCategories();
     final services = await fetchServices();
@@ -85,7 +114,8 @@ class ApiRepository implements Repository {
     String table,
     T Function(Map<String, dynamic>) parser,
   ) async {
-    final uri = Uri.parse('$baseUrl/records/$table?transform=1');
+    final separator = table.contains('?') ? '&' : '?';
+    final uri = Uri.parse('$baseUrl/records/$table${separator}transform=1');
     try {
       final response = await _client.get(uri);
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -104,6 +134,15 @@ class ApiRepository implements Repository {
         if (T == Charger) return (await _fallback!.fetchChargers()) as List<T>;
         if (T == Post) return (await _fallback!.fetchPosts()) as List<T>;
         if (T == User) return (await _fallback!.fetchUsers()) as List<T>;
+        if (T == ClassifiedCategory) {
+          return (await _fallback!.fetchClassifiedCategories()) as List<T>;
+        }
+        if (T == ClassifiedAd) {
+          return (await _fallback!.fetchClassifiedAds()) as List<T>;
+        }
+        if (T == ClassifiedImage) {
+          return (await _fallback!.fetchClassifiedImages(0)) as List<T>;
+        }
       }
       rethrow;
     }

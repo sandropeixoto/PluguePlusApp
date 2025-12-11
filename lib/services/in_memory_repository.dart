@@ -2,6 +2,9 @@ import 'package:collection/collection.dart';
 
 import '../models/category.dart';
 import '../models/charger.dart';
+import '../models/classified_ad.dart';
+import '../models/classified_category.dart';
+import '../models/classified_image.dart';
 import '../models/post.dart';
 import '../models/service.dart';
 import '../models/user.dart';
@@ -18,12 +21,21 @@ class InMemoryRepository implements Repository {
   final List<Charger> _chargers = [];
   final List<User> _users = [];
   final List<Post> _posts = [];
+  final List<ClassifiedCategory> _classifiedCategories = [];
+  final List<ClassifiedAd> _classifiedAds = [];
+  final List<ClassifiedImage> _classifiedImages = [];
 
   List<Category> listCategories() => List.unmodifiable(_categories);
   List<Service> listServices() => List.unmodifiable(_services);
   List<Charger> listChargers() => List.unmodifiable(_chargers);
   List<User> listUsers() => List.unmodifiable(_users);
   List<Post> listPosts() => List.unmodifiable(_posts);
+  List<ClassifiedCategory> listClassifiedCategories() =>
+      List.unmodifiable(_classifiedCategories);
+  List<ClassifiedAd> listClassifiedAds() => List.unmodifiable(_classifiedAds);
+  List<ClassifiedImage> listClassifiedImages(int adId) => List.unmodifiable(
+        _classifiedImages.where((img) => img.classifiedId == adId),
+      );
 
   @override
   Future<List<Category>> fetchCategories() async => listCategories();
@@ -48,6 +60,17 @@ class InMemoryRepository implements Repository {
 
   @override
   Future<List<User>> fetchUsers() async => listUsers();
+
+  @override
+  Future<List<ClassifiedCategory>> fetchClassifiedCategories() async =>
+      listClassifiedCategories();
+
+  @override
+  Future<List<ClassifiedAd>> fetchClassifiedAds() async => listClassifiedAds();
+
+  @override
+  Future<List<ClassifiedImage>> fetchClassifiedImages(int adId) async =>
+      listClassifiedImages(adId);
 
   Category createCategory({required String name, String? icon}) {
     final nextId = _categories.isEmpty ? 1 : _categories.last.id + 1;
@@ -175,6 +198,68 @@ class InMemoryRepository implements Repository {
     return post;
   }
 
+  ClassifiedCategory createClassifiedCategory({
+    required String name,
+    required String slug,
+    String? description,
+    String? icon,
+  }) {
+    final nextId =
+        _classifiedCategories.isEmpty ? 1 : _classifiedCategories.last.id + 1;
+    final category = ClassifiedCategory(
+      id: nextId,
+      name: name,
+      slug: slug,
+      description: description,
+      icon: icon,
+    );
+    _classifiedCategories.add(category);
+    return category;
+  }
+
+  ClassifiedAd createClassifiedAd({
+    required int userId,
+    required int categoryId,
+    required String title,
+    required String description,
+    required double price,
+    String status = 'active',
+  }) {
+    final nextId = _classifiedAds.isEmpty ? 1 : _classifiedAds.last.id + 1;
+    final category =
+        _classifiedCategories.firstWhereOrNull((c) => c.id == categoryId);
+    final ad = ClassifiedAd(
+      id: nextId,
+      userId: userId,
+      categoryId: categoryId,
+      title: title,
+      description: description,
+      price: price,
+      status: status,
+      createdAt: DateTime.now(),
+      categoryName: category?.name,
+      images: listClassifiedImages(nextId).map((e) => e.imagePath).toList(),
+    );
+    _classifiedAds.add(ad);
+    return ad;
+  }
+
+  void addClassifiedImage({
+    required int classifiedId,
+    required String imagePath,
+    bool isMain = false,
+  }) {
+    final nextId = _classifiedImages.isEmpty ? 1 : _classifiedImages.last.id + 1;
+    final img = ClassifiedImage(
+      id: nextId,
+      classifiedId: classifiedId,
+      imagePath: imagePath,
+      isMain: isMain,
+      createdAt: DateTime.now(),
+    );
+    _classifiedImages.add(img);
+  }
+
   void _seed() {
     final userSandro = createUser(
       name: 'Sandro Peixoto',
@@ -193,6 +278,10 @@ class InMemoryRepository implements Repository {
     final catOficinas = createCategory(name: 'Oficina Mecanica', icon: 'build');
     final catHospedagem = createCategory(name: 'Hospitalidade', icon: 'hotel');
     final catAcessorios = createCategory(name: 'Acessorios', icon: 'shopping');
+    final classCatVeiculos =
+        createClassifiedCategory(name: 'Veiculos', slug: 'veiculos');
+    final classCatPecas =
+        createClassifiedCategory(name: 'Pecas e Acessorios', slug: 'pecas');
 
     createService(
       name: 'Eletroposto Centro',
@@ -274,6 +363,33 @@ class InMemoryRepository implements Repository {
       likes: 5,
       comments: 4,
       shares: 0,
+    );
+
+    final ad1 = createClassifiedAd(
+      userId: userSandro.id,
+      categoryId: classCatVeiculos.id,
+      title: 'BYD Dolphin 2024 - impecavel',
+      description: '80k km, revisoes em dia, carregador incluso.',
+      price: 152000,
+      status: 'active',
+    );
+    addClassifiedImage(
+      classifiedId: ad1.id,
+      imagePath: 'https://placehold.co/400x250?text=Dolphin',
+      isMain: true,
+    );
+    final ad2 = createClassifiedAd(
+      userId: userGabi.id,
+      categoryId: classCatPecas.id,
+      title: 'Cabo Tipo 2 - 7kW',
+      description: 'Cabo pouco usado, comprei outro de 11kW.',
+      price: 850.0,
+      status: 'active',
+    );
+    addClassifiedImage(
+      classifiedId: ad2.id,
+      imagePath: 'https://placehold.co/400x250?text=Cabo+Tipo2',
+      isMain: true,
     );
   }
 }

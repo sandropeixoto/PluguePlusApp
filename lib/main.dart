@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'pages/chargers_page.dart';
+import 'pages/classifieds_page.dart';
 import 'pages/home_page.dart';
 import 'pages/services_page.dart';
+import 'pages/auth_page.dart';
 import 'services/api_repository.dart';
 import 'services/in_memory_repository.dart';
 import 'services/repository.dart';
@@ -36,6 +38,7 @@ class _PluguePlusAppState extends State<PluguePlusApp> {
       HomePage(repository: repository),
       ServicesPage(repository: repository),
       ChargersPage(repository: repository),
+      ClassifiedsPage(repository: repository),
     ];
 
     return MaterialApp(
@@ -65,8 +68,26 @@ class _PluguePlusAppState extends State<PluguePlusApp> {
               icon: Icon(Icons.ev_station_outlined),
               label: 'Carregadores',
             ),
+            NavigationDestination(
+              icon: Icon(Icons.class_outlined),
+              label: 'Classificados',
+            ),
           ],
         ),
+        floatingActionButton: currentIndex == 0
+            ? FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AuthPage(repository: repository),
+                    ),
+                  );
+                },
+                backgroundColor: const Color(0xFF0F8F5F),
+                icon: const Icon(Icons.person_add_alt_1),
+                label: const Text('Entrar / Cadastrar'),
+              )
+            : null,
       ),
     );
   }

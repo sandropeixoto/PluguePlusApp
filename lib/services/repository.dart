@@ -1,5 +1,8 @@
 import '../models/category.dart';
 import '../models/charger.dart';
+import '../models/classified_ad.dart';
+import '../models/classified_category.dart';
+import '../models/classified_image.dart';
 import '../models/post.dart';
 import '../models/service.dart';
 import '../models/user.dart';
@@ -21,6 +24,9 @@ abstract class Repository {
   Future<List<Category>> fetchCategories();
   Future<List<Service>> fetchServices();
   Future<List<Charger>> fetchChargers();
+  Future<List<ClassifiedCategory>> fetchClassifiedCategories() async => [];
+  Future<List<ClassifiedAd>> fetchClassifiedAds() async => [];
+  Future<List<ClassifiedImage>> fetchClassifiedImages(int adId) async => [];
   Future<List<Post>> fetchPosts() async => [];
   Future<List<User>> fetchUsers() async => [];
 
