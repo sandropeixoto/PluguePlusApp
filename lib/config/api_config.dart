@@ -1,5 +1,6 @@
 /// Configuracoes usadas em producao para consumir o php-crud-api.
 class ApiConfig {
+  static const String siteUrl = 'https://sspeixoto.com.br';
   static const String baseUrl =
       'https://sspeixoto.com.br/api/api-plugueplus.php';
   static const String uploadBaseUrl =
