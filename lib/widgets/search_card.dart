@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/category.dart';
+import 'category_icon.dart';
 
 class SearchCard extends StatelessWidget {
   const SearchCard({
@@ -87,7 +88,13 @@ class SearchCard extends StatelessWidget {
                       ...categories.map(
                         (c) => DropdownMenuItem<int?>(
                           value: c.id,
-                          child: Text(c.name),
+                          child: Row(
+                            children: [
+                              CategoryIcon(iconName: c.icon),
+                              const SizedBox(width: 8),
+                              Text(c.name),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -98,16 +105,16 @@ class SearchCard extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0F8F5F),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 16,
-                    ),
+                    padding: const EdgeInsets.all(16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   onPressed: onSearch,
-                  child: const Text('Buscar'),
+                  child: const Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),

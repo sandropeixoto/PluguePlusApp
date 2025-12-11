@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/category.dart';
@@ -313,80 +314,97 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildHero(HomeData data) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 40, 16, 24),
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF0B8F5F), Color(0xFF11B67A)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(26)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                child: const Icon(Icons.bolt, color: Color(0xFF0B8F5F)),
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF0B8F5F), Color(0xFF11B67A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(width: 10),
-              Text(
-                'Plugue+',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(26)),
+            ),
+          ),
+          Positioned.fill(
+            child: SvgPicture.asset(
+              'assets/images/background_pattern.svg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 40, 16, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: const Icon(Icons.bolt, color: Color(0xFF0B8F5F)),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Plugue+',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.notifications_none, color: Colors.white),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.person_outline, color: Colors.white),
+                    ),
+                  ],
                 ),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_none, color: Colors.white),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.person_outline, color: Colors.white),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            'Bem-vindo ao Plugue+',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
+                const SizedBox(height: 18),
+                Text(
+                  'Bem-vindo ao Plugue+',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Conecte-se a servicos especializados e pontos de recarga com energia verde.',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white.withOpacity(0.92),
+                    fontSize: 14,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    HeroStat(
+                      label: 'Servicos',
+                      value: data.services.length.toString(),
+                    ),
+                    const SizedBox(width: 12),
+                    HeroStat(
+                      label: 'Recargas',
+                      value: data.chargers.length.toString(),
+                    ),
+                    const SizedBox(width: 12),
+                    HeroStat(
+                      label: 'Comunidade',
+                      value: data.posts.length.toString(),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Conecte-se a servicos especializados e pontos de recarga com energia verde.',
-            style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.92),
-              fontSize: 14,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Row(
-            children: [
-              HeroStat(
-                label: 'Servicos',
-                value: data.services.length.toString(),
-              ),
-              const SizedBox(width: 12),
-              HeroStat(
-                label: 'Recargas',
-                value: data.chargers.length.toString(),
-              ),
-              const SizedBox(width: 12),
-              HeroStat(
-                label: 'Comunidade',
-                value: data.posts.length.toString(),
-              ),
-            ],
           ),
         ],
       ),
