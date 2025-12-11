@@ -72,6 +72,63 @@ class InMemoryRepository implements Repository {
   Future<List<ClassifiedImage>> fetchClassifiedImages(int adId) async =>
       listClassifiedImages(adId);
 
+  @override
+  Future<User> createUser({
+    required String name,
+    required String email,
+    String? city,
+    String? state,
+    String? vehicleModel,
+    String userType = 'owner',
+  }) async {
+    return createUserSync(
+      name: name,
+      email: email,
+      city: city,
+      state: state,
+    );
+  }
+
+  @override
+  Future<Post> createPost({
+    required int userId,
+    required String content,
+    String? imageUrl,
+  }) async {
+    return createPostSync(
+      userId: userId,
+      content: content,
+    );
+  }
+
+  @override
+  Future<ClassifiedAd> createClassifiedAd({
+    required int userId,
+    required int categoryId,
+    required String title,
+    required String description,
+    required double price,
+    String status = 'active',
+    List<String> imageUrls = const [],
+  }) async {
+    final ad = createClassifiedAdSync(
+      userId: userId,
+      categoryId: categoryId,
+      title: title,
+      description: description,
+      price: price,
+      status: status,
+    );
+    for (var i = 0; i < imageUrls.length; i++) {
+      addClassifiedImage(
+        classifiedId: ad.id,
+        imagePath: imageUrls[i],
+        isMain: i == 0,
+      );
+    }
+    return ad;
+  }
+
   Category createCategory({required String name, String? icon}) {
     final nextId = _categories.isEmpty ? 1 : _categories.last.id + 1;
     final category = Category(
@@ -158,7 +215,7 @@ class InMemoryRepository implements Repository {
     return charger;
   }
 
-  User createUser({
+  User createUserSync({
     required String name,
     required String email,
     String? city,
@@ -177,7 +234,7 @@ class InMemoryRepository implements Repository {
     return user;
   }
 
-  Post createPost({
+  Post createPostSync({
     required int userId,
     required String content,
     int likes = 0,
@@ -217,7 +274,7 @@ class InMemoryRepository implements Repository {
     return category;
   }
 
-  ClassifiedAd createClassifiedAd({
+  ClassifiedAd createClassifiedAdSync({
     required int userId,
     required int categoryId,
     required String title,

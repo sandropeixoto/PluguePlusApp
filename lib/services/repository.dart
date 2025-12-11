@@ -30,6 +30,38 @@ abstract class Repository {
   Future<List<Post>> fetchPosts() async => [];
   Future<List<User>> fetchUsers() async => [];
 
+  /// Criacao
+  Future<User> createUser({
+    required String name,
+    required String email,
+    String? city,
+    String? state,
+    String? vehicleModel,
+    String userType = 'owner',
+  }) async {
+    throw UnimplementedError();
+  }
+
+  Future<Post> createPost({
+    required int userId,
+    required String content,
+    String? imageUrl,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  Future<ClassifiedAd> createClassifiedAd({
+    required int userId,
+    required int categoryId,
+    required String title,
+    required String description,
+    required double price,
+    String status = 'active',
+    List<String> imageUrls = const [],
+  }) async {
+    throw UnimplementedError();
+  }
+
   /// Conveniencia para carregar os dados usados na home de uma vez.
   Future<RepositorySnapshot> fetchSnapshot() async {
     final categories = await fetchCategories();

@@ -267,6 +267,20 @@ class _RegisterFormState extends State<_RegisterForm> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    widget.onMessage('Conta criada (mock). Ajuste para persistir via API de users.');
+    try {
+      await widget.repository.createUser(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        city: _cityController.text.trim().isEmpty
+            ? null
+            : _cityController.text.trim(),
+        state: _stateController.text.trim().isEmpty
+            ? null
+            : _stateController.text.trim(),
+      );
+      widget.onMessage('Conta criada com sucesso.');
+    } catch (e) {
+      widget.onMessage('Erro ao criar conta: $e');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,6 +8,7 @@ import '../models/post.dart';
 import '../models/service.dart';
 import '../models/user.dart';
 import '../services/repository.dart';
+import '../services/upload_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.repository});
@@ -20,7 +22,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<_HomeData> _future;
   final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _postContentController = TextEditingController();
+  final TextEditingController _postNameController = TextEditingController();
+  final TextEditingController _postEmailController = TextEditingController();
+  final UploadService _uploadService = UploadService();
   int? _selectedCategoryId;
+  bool _posting = false;
+  String? _postImageUrl;
 
   @override
   void initState() {
@@ -44,6 +52,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _cityController.dispose();
+    _postContentController.dispose();
+    _postNameController.dispose();
+    _postEmailController.dispose();
     super.dispose();
   }
 
@@ -132,6 +143,14 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.feed_outlined,
                       ),
                       TextButton.icon(
+                        onPressed: _openNewPostSheet,
+                        icon: const Icon(Icons.add_comment_outlined),
+                        label: const Text('Nova postagem'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFF0F8F5F),
+                        ),
+                      ),
+                      TextButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.launch_outlined),
                         label: const Text('Ver feed completo'),
@@ -180,6 +199,107 @@ class _HomePageState extends State<HomePage> {
               false);
       return cityMatch;
     }).toList();
+  }
+
+  void _openNewPostSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: _PostComposer(
+            onSubmit: _submitPost,
+            onPickImage: _pickPostImage,
+            contentController: _postContentController,
+            nameController: _postNameController,
+            emailController: _postEmailController,
+            imageUrl: _postImageUrl,
+            posting: _posting,
+            clearImage: () => setState(() => _postImageUrl = null),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _pickPostImage() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp'],
+        withData: true,
+      );
+      if (result == null || result.files.isEmpty) return;
+      final file = result.files.first;
+      if (file.bytes == null) return;
+      setState(() => _posting = true);
+      final upload = await _uploadService.uploadPostImage(
+        bytes: file.bytes!,
+        originalName: file.name,
+      );
+      setState(() {
+        _postImageUrl = upload.url;
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao enviar imagem: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _posting = false);
+    }
+  }
+
+  Future<void> _submitPost() async {
+    final content = _postContentController.text.trim();
+    final name = _postNameController.text.trim();
+    final email = _postEmailController.text.trim();
+    if (content.isEmpty || name.isEmpty || email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha nome, email e mensagem.')),
+      );
+      return;
+    }
+    setState(() => _posting = true);
+    try {
+      final users = await widget.repository.fetchUsers();
+      User user = users.firstWhere(
+        (u) => u.email.toLowerCase() == email.toLowerCase(),
+        orElse: () => const User(id: 0, name: '', email: ''),
+      );
+      if (user.id == 0) {
+        user = await widget.repository.createUser(name: name, email: email);
+      }
+      await widget.repository.createPost(
+        userId: user.id,
+        content: content,
+        imageUrl: _postImageUrl,
+      );
+      _postContentController.clear();
+      _postImageUrl = null;
+      Navigator.of(context).maybePop();
+      setState(() {
+        _future = _loadData();
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao publicar: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _posting = false);
+    }
   }
 
   Widget _buildHero(_HomeData data) {
@@ -706,6 +826,112 @@ class _PostsCarousel extends StatelessWidget {
       },
       separatorBuilder: (_, __) => const SizedBox(width: 14),
       itemCount: posts.length,
+    );
+  }
+}
+
+class _PostComposer extends StatelessWidget {
+  const _PostComposer({
+    required this.onSubmit,
+    required this.onPickImage,
+    required this.clearImage,
+    required this.contentController,
+    required this.nameController,
+    required this.emailController,
+    required this.posting,
+    this.imageUrl,
+  });
+
+  final VoidCallback onSubmit;
+  final VoidCallback onPickImage;
+  final VoidCallback clearImage;
+  final TextEditingController contentController;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final bool posting;
+  final String? imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Nova postagem',
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Seu nome',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: 'Seu email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: contentController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: 'Compartilhe sua experiencia',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.image_outlined),
+                  label: const Text('Adicionar imagem'),
+                  onPressed: posting ? null : onPickImage,
+                ),
+                const SizedBox(width: 10),
+                if (imageUrl != null)
+                  Chip(
+                    label: Text(
+                      imageUrl!.split('/').last,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onDeleted: posting ? null : clearImage,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: posting
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.send),
+                label: const Text('Publicar'),
+                onPressed: posting ? null : onSubmit,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0F8F5F),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

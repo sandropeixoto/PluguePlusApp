@@ -11,6 +11,7 @@ import '../models/classified_image.dart';
 import '../models/post.dart';
 import '../models/service.dart';
 import '../models/user.dart';
+import '../models/parsers.dart';
 import 'repository.dart';
 
 /// Consome o php-crud-api hospedado em producao.
@@ -108,6 +109,80 @@ class ApiRepository implements Repository {
       services: services,
       chargers: chargers,
     );
+  }
+
+  @override
+  Future<User> createUser({
+    required String name,
+    required String email,
+    String? city,
+    String? state,
+    String? vehicleModel,
+    String userType = 'owner',
+  }) async {
+    final payload = {
+      'name': name,
+      'email': email,
+      'city': city,
+      'state': state,
+      'vehicle_model': vehicleModel,
+      'user_type': userType,
+      'password': '', // backend pode ignorar ou sobrescrever
+    };
+    final created = await _postRecord(ApiConfig.usersTable, payload);
+    final user = User.fromJson(created);
+    _users = null; // invalida cache
+    return user;
+  }
+
+  @override
+  Future<Post> createPost({
+    required int userId,
+    required String content,
+    String? imageUrl,
+  }) async {
+    final payload = {
+      'user_id': userId,
+      'content': content,
+      if (imageUrl != null) 'image_url': imageUrl,
+    };
+    final created = await _postRecord(ApiConfig.postsTable, payload);
+    _posts = null;
+    return Post.fromJson(created);
+  }
+
+  @override
+  Future<ClassifiedAd> createClassifiedAd({
+    required int userId,
+    required int categoryId,
+    required String title,
+    required String description,
+    required double price,
+    String status = 'active',
+    List<String> imageUrls = const [],
+  }) async {
+    final payload = {
+      'user_id': userId,
+      'category_id': categoryId,
+      'title': title,
+      'description': description,
+      'price': price,
+      'status': status,
+    };
+    final created = await _postRecord(ApiConfig.classifiedAdsTable, payload);
+    final adId = parseInt(created['id']);
+
+    // cria imagens vinculadas
+    for (var i = 0; i < imageUrls.length; i++) {
+      await _postRecord(ApiConfig.classifiedImagesTable, {
+        'classified_id': adId,
+        'image_path': imageUrls[i],
+        'is_main': i == 0 ? 1 : 0,
+      });
+    }
+    _classifiedAds = null;
+    _classifiedImages = null;
+    return ClassifiedAd.fromJson(created);
   }
 
   Future<List<T>> _fetchRecords<T>(
