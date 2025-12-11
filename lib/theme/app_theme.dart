@@ -59,7 +59,6 @@ class AppTheme {
         secondary: petroleumBlue,
         surface: lightGray,
         onSurface: pureWhite,
-        background: background,
         error: lemonYellow,
       ),
       textTheme: GoogleFonts.poppinsTextTheme(baseTheme.textTheme).copyWith(

@@ -70,7 +70,7 @@ class SearchCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<int?>(
-                    value: selectedCategoryId,
+                    initialValue: selectedCategoryId,
                     decoration: const InputDecoration(
                       labelText: 'Categoria',
                       filled: true,

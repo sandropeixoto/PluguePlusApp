@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../models/category.dart';
 import '../models/charger.dart';
 import '../models/home_data.dart';
-import '../models/post.dart';
 import '../models/service.dart';
 import '../models/user.dart';
 import '../services/repository.dart';

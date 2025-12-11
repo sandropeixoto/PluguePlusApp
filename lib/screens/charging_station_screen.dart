@@ -46,8 +46,8 @@ class ChargingStationScreen extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {},
                             style: AppTheme.themeData.elevatedButtonTheme.style?.copyWith(
-                              backgroundColor: MaterialStateProperty.all(AppTheme.primaryGreen),
-                              minimumSize: MaterialStateProperty.all(const Size(double.infinity, 60)),
+                              backgroundColor: WidgetStateProperty.all(AppTheme.primaryGreen),
+                              minimumSize: WidgetStateProperty.all(const Size(double.infinity, 60)),
                             ),
                             child: const Text('Iniciar Carregamento'),
                           ),

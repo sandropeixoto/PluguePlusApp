@@ -3,7 +3,6 @@ import 'package:plugueplus/screens/charging_station_screen.dart';
 import 'package:plugueplus/screens/classifieds_screen.dart';
 import 'package:plugueplus/screens/dashboard_screen.dart';
 import 'package:plugueplus/screens/feed_screen.dart';
-import 'package:plugueplus/theme/app_theme.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});

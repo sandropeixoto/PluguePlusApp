@@ -376,7 +376,7 @@ class _NewAdFormState extends State<_NewAdForm> {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<ClassifiedCategory>(
-                  value: _selectedCategory,
+                  initialValue: _selectedCategory,
                   items: _categories
                       .map(
                         (c) => DropdownMenuItem(value: c, child: Text(c.name)),
